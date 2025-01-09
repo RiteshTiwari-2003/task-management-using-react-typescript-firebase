@@ -48,3 +48,41 @@ export default tseslint.config({
   },
 })
 ```
+
+# The Alter Office Task Management System
+
+A modern, responsive task management system built with React, TypeScript, and Firebase.
+
+## Live Demo
+Visit the application at: https://task-management-app-9162b.web.app
+
+## Features
+
+### Core Features
+- 📱 Responsive design that works on desktop and mobile
+- 🔐 User authentication with email and password
+- ✅ Create, read, update, and delete tasks
+- 🏷️ Categorize tasks (Todo, In-Progress, Completed)
+- 📋 Multiple task selection for bulk operations
+- 🎨 Different background colors for different task sections
+- 🔄 Real-time updates using Firebase
+
+### User Interface
+- Clean and intuitive design
+- Task filtering and search functionality
+- Drag and drop interface for task management
+- Expandable/collapsible task sections
+- Bulk delete functionality
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+- Git
+
+### Local Development Setup
+1. Clone the repository
+```bash
+git clone https://github.com/RiteshTiwari-2003/task-management-using-react-typescript-firebase.git
+cd taskbuddy
