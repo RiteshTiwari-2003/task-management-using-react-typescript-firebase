@@ -42,56 +42,76 @@ const TaskTable = memo(({
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg">
-      <table className="min-w-full">
-        <thead>
-          <tr className={`${getSectionColor(sectionType)} border-b border-gray-200`}>
-            <th className="w-10 px-4 py-3 text-left">
-              <input
-                type="checkbox"
-                checked={allSelected}
-                onChange={(e) => onSelectAll(e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-            </th>
-            <th className="w-2/5 px-4 py-3 text-left font-semibold text-gray-700">Task Name</th>
-            <th className="w-1/5 px-4 py-3 text-left font-semibold text-gray-700">Due Date</th>
-            <th className="w-1/5 px-4 py-3 text-left font-semibold text-gray-700">Category</th>
-            <th className="w-1/5 px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
-          </tr>
-        </thead>
-        <tbody className={getSectionColor(sectionType)}>
-          {tasks.map((task) => (
-            <tr key={task.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-              <td className="px-4 py-3">
-                <input
-                  type="checkbox"
-                  checked={selectedTasks.has(task.id)}
-                  onChange={(e) => onTaskSelect(task.id, e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-              </td>
-              <td className="px-4 py-3 text-gray-800">{task.title}</td>
-              <td className="px-4 py-3 text-gray-600">{format(new Date(task.dueDate), 'MMM dd, yyyy')}</td>
-              <td className="px-4 py-3 text-gray-600">{task.category}</td>
-              <td className="px-4 py-3">
-                <button
-                  onClick={() => onEdit(task)}
-                  className="text-blue-600 hover:text-blue-800 mr-3 transition-colors"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => onDelete(task.id)}
-                  className="text-red-600 hover:text-red-800 transition-colors"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="overflow-x-auto rounded-lg -mx-4 sm:mx-0">
+      <div className="min-w-full inline-block align-middle">
+        <div className="overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className={`${getSectionColor(sectionType)}`}>
+              <tr>
+                <th scope="col" className="w-10 px-3 py-3 text-left">
+                  <input
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={(e) => onSelectAll(e.target.checked)}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Task Name
+                </th>
+                <th scope="col" className="hidden sm:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Due Date
+                </th>
+                <th scope="col" className="hidden sm:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className={`${getSectionColor(sectionType)} divide-y divide-gray-200`}>
+              {tasks.map((task) => (
+                <tr key={task.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-3 py-4 whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      checked={selectedTasks.has(task.id)}
+                      onChange={(e) => onTaskSelect(task.id, e.target.checked)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                  </td>
+                  <td className="px-3 py-4 whitespace-normal break-words max-w-[150px] sm:max-w-xs">
+                    <div className="text-sm text-gray-900">{task.title}</div>
+                  </td>
+                  <td className="hidden sm:table-cell px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {format(new Date(task.dueDate), 'MMM dd, yyyy')}
+                  </td>
+                  <td className="hidden sm:table-cell px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {task.category}
+                  </td>
+                  <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <button
+                        onClick={() => onEdit(task)}
+                        className="text-blue-600 hover:text-blue-800 transition-colors text-sm"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => onDelete(task.id)}
+                        className="text-red-600 hover:text-red-800 transition-colors text-sm"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 });
@@ -105,6 +125,7 @@ export const TaskView = () => {
   }
 
   const [viewMode, setViewMode] = useState<'list' | 'board'>('list');
+  const [searchQuery, setSearchQuery] = useState('');
   const [expandedSections, setExpandedSections] = useState<ExpandedSections>({
     Todo: true,
     'In-Progress': true,
@@ -130,7 +151,6 @@ export const TaskView = () => {
 
   const {
     tasks,
-    loading,
     error,
     fetchTasks,
     addTask,
@@ -138,8 +158,6 @@ export const TaskView = () => {
     deleteTask,
     cleanup
   } = useTaskStore();
-
-  const searchQuery = useTaskStore((state) => state.searchQuery);
 
   const filteredTasks = tasks.filter((task) => 
     searchQuery
@@ -265,62 +283,49 @@ export const TaskView = () => {
   const completedTasks = filteredTasks.filter(task => task.status === 'Completed');
 
   return (
-    <div className="container mx-auto p-4">
-      {loading && (
-        <div className="fixed top-0 left-0 w-full h-1 bg-blue-200">
-          <div className="h-full bg-blue-600 animate-loading-bar"></div>
-        </div>
-      )}
-
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex space-x-4">
+    <div className="max-w-full overflow-x-auto">
+      <div className="flex items-center justify-between flex-wrap gap-4 p-4">
+        <div className="flex items-center space-x-4 flex-wrap gap-2">
           <button
-            onClick={() => setViewMode('list')}
-            className={`px-4 py-2 rounded ${
-              viewMode === 'list'
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-200 text-gray-700'
-            }`}
-          >
-            List
-          </button>
-          <button
-            onClick={() => setViewMode('board')}
-            className={`px-4 py-2 rounded ${
-              viewMode === 'board'
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-200 text-gray-700'
-            }`}
-          >
-            Board
-          </button>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <div className="flex space-x-2">
-            <select
-              className="border rounded px-2 py-1"
-              onChange={(e) => console.log('Category filter:', e.target.value)}
-            >
-              <option value="">Category</option>
-              <option value="Work">Work</option>
-              <option value="Personal">Personal</option>
-            </select>
-            <input
-              type="date"
-              className="border rounded px-2 py-1"
-              onChange={(e) => console.log('Due date filter:', e.target.value)}
-            />
-          </div>
-          <button
-            onClick={() => setShowAddTaskForm(!showAddTaskForm)}
-            className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+            onClick={() => setShowAddTaskForm(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
           >
             Add Task
           </button>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setViewMode('list')}
+              className={`px-3 py-1.5 rounded-lg text-sm sm:text-base ${
+                viewMode === 'list'
+                  ? 'bg-gray-200 text-gray-800'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              List View
+            </button>
+            <button
+              onClick={() => setViewMode('board')}
+              className={`px-3 py-1.5 rounded-lg text-sm sm:text-base ${
+                viewMode === 'board'
+                  ? 'bg-gray-200 text-gray-800'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              Board View
+            </button>
+          </div>
+        </div>
+        <div className="w-full sm:w-auto">
+          <input
+            type="text"
+            placeholder="Search tasks..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full sm:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          />
         </div>
       </div>
-      
+
       {showAddTaskForm && (
         <form onSubmit={handleAddTask} className="mt-4 bg-white p-4 rounded-lg shadow mb-6">
           <div className="mb-4">
@@ -434,15 +439,15 @@ export const TaskView = () => {
       )}
 
       {viewMode === 'list' ? (
-        <div className="space-y-6 p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
+        <div className="space-y-6 p-2 sm:p-6 bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen">
           {selectedTasks.size > 0 && (
-            <div className="mb-4 p-3 bg-white rounded-lg shadow-md flex items-center justify-between border border-gray-200">
-              <span className="text-gray-700 font-medium">
+            <div className="mb-4 p-3 bg-white rounded-lg shadow-md flex flex-col sm:flex-row items-center justify-between gap-2 border border-gray-200">
+              <span className="text-gray-700 font-medium text-sm sm:text-base">
                 {selectedTasks.size} task{selectedTasks.size !== 1 ? 's' : ''} selected
               </span>
               <button
                 onClick={handleBulkDelete}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-sm sm:text-base"
               >
                 Delete Selected ({selectedTasks.size})
               </button>
