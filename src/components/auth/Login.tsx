@@ -1,4 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup } from '@firebase/auth';
+import { FirebaseError } from '@firebase/util';
 import { auth } from '../../services/firebase';
 import { useAuthStore } from '../../store/authStore';
 import { useNavigate } from 'react-router-dom';
@@ -13,11 +14,30 @@ export const Login = () => {
       provider.setCustomParameters({
         prompt: 'select_account'
       });
+      console.log('Initiating Google Sign In...');
       const result = await signInWithPopup(auth, provider);
+      console.log('Sign in successful:', result.user.email);
       setUser(result.user);
       navigate('/');
-    } catch (error) {
-      console.error('Error signing in with Google:', error);
+    } catch (error: unknown) {
+      if (error instanceof FirebaseError) {
+        console.error('Detailed sign-in error:', {
+          code: error.code,
+          message: error.message,
+          credential: error.customData?.credential
+        });
+        
+        // Handle specific error cases
+        if (error.code === 'auth/popup-blocked') {
+          alert('Please enable popups for this website to sign in with Google');
+        } else if (error.code === 'auth/cancelled-popup-request') {
+          console.log('Sign-in cancelled by user');
+        } else {
+          alert('Error signing in. Please try again.');
+        }
+      } else {
+        console.error('Unknown error:', error);
+      }
     }
   };
 
