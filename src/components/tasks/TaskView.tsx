@@ -145,9 +145,20 @@ export const TaskView = () => {
     priority: 'Medium' as TaskPriority,
     activities: [],
     createdBy: user?.uid || '',
-    userId: user?.uid || '',
+    userId: user?.uid || '', // Make sure this is set correctly
     attachment: null as File | null
   });
+
+  useEffect(() => {
+    if (user) {
+      console.log('Current user UID:', user.uid);
+      setNewTask(prev => ({
+        ...prev,
+        userId: user.uid,
+        createdBy: user.uid
+      }));
+    }
+  }, [user]);
 
   const {
     tasks,

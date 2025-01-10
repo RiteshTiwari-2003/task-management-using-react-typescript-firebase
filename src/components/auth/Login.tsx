@@ -17,6 +17,7 @@ export const Login = () => {
       console.log('Initiating Google Sign In...');
       const result = await signInWithPopup(auth, provider);
       console.log('Sign in successful:', result.user.email);
+      console.log('Authenticated User UID:', result.user.uid);
       setUser(result.user);
       navigate('/');
     } catch (error: unknown) {

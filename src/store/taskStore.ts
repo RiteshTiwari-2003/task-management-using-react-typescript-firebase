@@ -51,6 +51,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     if (unsubscribe) unsubscribe();
 
     set({ loading: true, error: null });
+    console.log('Fetching tasks for user ID:', userId);
 
     try {
       const tasksRef = collection(db, 'tasks');
