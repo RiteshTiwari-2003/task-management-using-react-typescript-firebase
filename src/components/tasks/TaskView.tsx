@@ -41,66 +41,89 @@ const TaskTable = memo(({
     }
   };
 
+  const getPriorityColor = (priority: TaskPriority) => {
+    switch(priority) {
+      case 'Low':
+        return 'bg-green-100';
+      case 'Medium':
+        return 'bg-yellow-100';
+      case 'High':
+        return 'bg-red-100';
+      default:
+        return 'bg-gray-100';
+    }
+  };
+
   return (
-    <div className="overflow-x-auto rounded-lg -mx-4 sm:mx-0">
+    <div className="task-table-container">
       <div className="min-w-full inline-block align-middle">
         <div className="overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className={`${getSectionColor(sectionType)}`}>
               <tr>
-                <th scope="col" className="w-10 px-3 py-3 text-left">
+                <th scope="col" className="task-cell">
                   <input
                     type="checkbox"
                     checked={allSelected}
                     onChange={(e) => onSelectAll(e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                   />
                 </th>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Task Name
+                <th scope="col" className="task-cell text-left font-medium text-gray-500">
+                  Title
                 </th>
-                <th scope="col" className="hidden sm:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="task-cell text-left font-medium text-gray-500">
+                  Priority
+                </th>
+                <th scope="col" className="task-cell text-left font-medium text-gray-500">
                   Due Date
                 </th>
-                <th scope="col" className="hidden sm:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="task-cell text-left font-medium text-gray-500">
                   Category
                 </th>
-                <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="task-cell text-right font-medium text-gray-500">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className={`${getSectionColor(sectionType)} divide-y divide-gray-200`}>
+            <tbody className="bg-white divide-y divide-gray-200">
               {tasks.map((task) => (
-                <tr key={task.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-3 py-4 whitespace-nowrap">
+                <tr key={task.id} className="task-row">
+                  <td className="task-cell">
                     <input
                       type="checkbox"
                       checked={selectedTasks.has(task.id)}
                       onChange={(e) => onTaskSelect(task.id, e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                     />
                   </td>
-                  <td className="px-3 py-4 whitespace-normal break-words max-w-[150px] sm:max-w-xs">
-                    <div className="text-sm text-gray-900">{task.title}</div>
+                  <td className="task-cell">
+                    <div className="text-truncate max-w-xs">{task.title}</div>
                   </td>
-                  <td className="hidden sm:table-cell px-3 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {format(new Date(task.dueDate), 'MMM dd, yyyy')}
+                  <td className="task-cell">
+                    <span className={`status-badge ${getPriorityColor(task.priority)}`}>
+                      {task.priority}
+                    </span>
                   </td>
-                  <td className="hidden sm:table-cell px-3 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {task.category}
+                  <td className="task-cell text-gray-500">
+                    {format(new Date(task.dueDate), 'MMM d, yyyy')}
                   </td>
-                  <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <div className="flex flex-col sm:flex-row gap-2">
+                  <td className="task-cell">
+                    <span className="status-badge bg-gray-100 text-gray-800">
+                      {task.category}
+                    </span>
+                  </td>
+                  <td className="task-cell text-right">
+                    <div className="flex justify-end space-x-2">
                       <button
                         onClick={() => onEdit(task)}
-                        className="text-blue-600 hover:text-blue-800 transition-colors text-sm"
+                        className="text-indigo-600 hover:text-indigo-900"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => onDelete(task.id)}
-                        className="text-red-600 hover:text-red-800 transition-colors text-sm"
+                        className="text-red-600 hover:text-red-900"
                       >
                         Delete
                       </button>

@@ -11,27 +11,142 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Base responsive styles */
 @layer base {
+  html {
+    @apply text-base;
+  }
+
   body {
-    @apply bg-gray-50;
+    @apply bg-gray-50 min-h-screen overflow-x-hidden;
+  }
+
+  h1 {
+    @apply text-xl sm:text-2xl md:text-3xl font-bold;
   }
 }
 
+/* Component styles */
 @layer components {
+  /* Button styles */
   .btn {
-    @apply px-4 py-2 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply px-3 sm:px-4 py-1.5 sm:py-2 rounded-md font-medium 
+           focus:outline-none focus:ring-2 focus:ring-offset-2
+           text-sm sm:text-base transition-colors duration-200;
   }
 
   .btn-primary {
-    @apply bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500;
+    @apply bg-purple-600 text-white hover:bg-purple-700 
+           focus:ring-purple-500 active:bg-purple-800;
   }
 
   .btn-secondary {
-    @apply bg-white text-gray-700 hover:bg-gray-50 focus:ring-purple-500 border border-gray-300;
+    @apply bg-white text-gray-700 hover:bg-gray-50 
+           focus:ring-purple-500 border border-gray-300;
   }
 
-  .input {
-    @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500;
+  /* Header responsive styles */
+  .header-container {
+    @apply max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-4;
+  }
+
+  .header-nav {
+    @apply ml-2 sm:ml-8 flex space-x-2 sm:space-x-4;
+  }
+
+  /* Task table responsive styles */
+  .task-table-container {
+    @apply overflow-x-auto rounded-lg -mx-4 sm:mx-0 
+           shadow-sm sm:shadow bg-white;
+  }
+
+  .task-row {
+    @apply hover:bg-gray-50 transition-colors duration-150
+           border-b border-gray-200 text-sm sm:text-base;
+  }
+
+  .task-cell {
+    @apply px-2 sm:px-4 py-2 sm:py-3 whitespace-nowrap;
+  }
+
+  /* Form styles */
+  .form-group {
+    @apply space-y-2 sm:space-y-3 mb-4 sm:mb-6;
+  }
+
+  .form-input {
+    @apply w-full rounded-md border-gray-300 shadow-sm
+           focus:border-purple-500 focus:ring-purple-500
+           text-sm sm:text-base;
+  }
+
+  .form-label {
+    @apply block text-sm sm:text-base font-medium text-gray-700;
+  }
+
+  /* Modal styles */
+  .modal-container {
+    @apply fixed inset-0 z-50 overflow-y-auto p-4 sm:p-6;
+  }
+
+  .modal-content {
+    @apply relative bg-white rounded-lg shadow-xl 
+           w-full max-w-lg mx-auto p-4 sm:p-6;
+  }
+
+  /* Board view styles */
+  .board-container {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6
+           p-2 sm:p-4 bg-gray-100 rounded-lg;
+  }
+
+  .board-column {
+    @apply bg-white rounded-lg shadow p-3 sm:p-4;
+  }
+
+  /* Search bar styles */
+  .search-container {
+    @apply relative w-full max-w-xs sm:max-w-sm md:max-w-md;
+  }
+
+  .search-input {
+    @apply w-full pl-10 pr-4 py-1.5 sm:py-2 
+           rounded-md border border-gray-300
+           focus:border-purple-500 focus:ring-purple-500
+           text-sm sm:text-base;
+  }
+
+  /* Status badges */
+  .status-badge {
+    @apply px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium;
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  .text-truncate {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  /* Responsive padding utilities */
+  .p-responsive {
+    @apply p-2 sm:p-4 md:p-6;
+  }
+
+  .px-responsive {
+    @apply px-2 sm:px-4 md:px-6;
+  }
+
+  .py-responsive {
+    @apply py-2 sm:py-4 md:py-6;
   }
 }
 
@@ -42,11 +157,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
 }
 
 button {
